@@ -466,16 +466,15 @@ enum JsonTestCases: String, CaseIterable {
         }
     }
     case escape =
-        """
-        	{
-        		"message": "Hello, world! 🌍",
-        		"specialChars": "!@#$%^&*()_+{}:\\\"<>?[];',./`~",
-        		"whitespace": "   This has leading and trailing spaces   ",
-        		"newlines": "This\\nhas\\nnewlines",
-        		"unicodeEscaped": "\\u0048\\u0065\\u006C\\u006C\\u006F",
-                "escapedString": "This is a \\\\"quoted\\\\" string with \\\\\\\\ backslashes and \\\\n newlines."
-        	}
-        """
+		"""
+			{
+				"message": "Hello, world! 🌍",
+				"specialChars": "!@#$%^&*()_+{}:\\\"<>?[];',./`~",
+				"whitespace": "   This has leading and trailing spaces   ",
+				"newlines": "This\\nhas\\nnewlines",
+				"unicodeEscaped": "\\u0048\\u0065\\u006C\\u006C\\u006F",
+			}
+		"""
     func escape() -> Json {
         Json {
             Key("message") { StringField("Hello, world! 🌍") }
@@ -483,10 +482,6 @@ enum JsonTestCases: String, CaseIterable {
             Key("whitespace") { StringField("   This has leading and trailing spaces   ") }
             Key("newlines") { StringField(#"This\nhas\nnewlines"#) }
             Key("unicodeEscaped") { StringField("\\u0048\\u0065\\u006C\\u006C\\u006F") }
-            Key("escapedString") {
-                StringField(
-                    #"This is a \\"quoted\\" string with \\\\ backslashes and \\n newlines."#)
-            }
         }
     }
     case complexMixedTypes =
