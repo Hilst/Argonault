@@ -28,37 +28,41 @@ Code:
 ```swift
 import Argonaults
 
-let senior = Worker(name: "Jason", age: 40, languages: [.swift, .objectiveC])
-let junior = Worker(name: "Orfeu", age: 20, languages: [.swift])
-let team = Team(name: "Argonaults", members: [senior, junior])
+let members: [(name: String, age: Int, languages: [String])] = [
+    ("Jason", 40, ["Swift", "Objective-C"]),
+    ("Orfeu", 20, ["Swift"]),
+]
 
 let json = Json {
-        JsonKey("name") { StringField(team.name) }
-        JsonKey("members") {
-            ArrayField {
-                for member in team.members {
-                    Json {
-                        JsonKey("name") { StringField(member.name) }
-                        JsonKey("age") { NumberField(member.age) }
-                        JsonKey("languages") {
-                            ArrayField {
-                                for language in member.languages {
-                                    Json {
-                                        JsonKey("name") { StringField(language.name) }
-                                    }
+    JsonKey("name") { StringField("Argonaults") }
+    JsonKey("members") {
+        ArrayField {
+            for member in members {
+                Json {
+                    JsonKey("name") { StringField(member.name) }
+                    JsonKey("age") { NumberField(member.age) }
+                    JsonKey("languages") {
+                        ArrayField {
+                            for language in member.languages {
+                                Json {
+                                    JsonKey("name") { StringField(language) }
                                 }
                             }
                         }
-                        JsonKey("is_senior") { BoolField {
+                    }
+                    JsonKey("is_senior") {
+                        BooleanField {
                             member.age > 30 && member.languages.count > 1
-                        } }
+                        }
                     }
                 }
             }
         }
     }
+}
 
-print(json.render(.prettyPrinted))
+let asString = json.render(writingOptions: .prettyPrinted)!
+print(asString)
 ```
 
 Output:
@@ -70,13 +74,13 @@ Output:
     {
       "name": "Jason",
       "age": 40,
-      "languages": [{ "name": "swift" }, { "name": "objectiveC" }],
+      "languages": [{ "name": "Swift" }, { "name": "Objective-C" }],
       "is_senior": true
     },
     {
       "name": "Orfeu",
       "age": 20,
-      "languages": [{ "name": "swift" }],
+      "languages": [{ "name": "Swift" }],
       "is_senior": false
     }
   ]
