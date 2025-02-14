@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 
 @testable import Argonault
@@ -68,12 +69,12 @@ struct ComplexUseCase {
     }
 
     let senioriOS = Worker(
-        name: "Jason ", age: 1, isDeveloper: true, languages: [.swift, .objectiveC])
+        name: "Jason", age: 1, isDeveloper: true, languages: [.swift, .objectiveC])
     let seniorAndroid = Worker(
-        name: "Hercules ", age: 1, isDeveloper: true, languages: [.kotlin, .java])
-    let junioriOS = Worker(name: "Orfeu ", age: 1, isDeveloper: true, languages: [.swift])
-    let juniorAndroid = Worker(name: "Teseu ", age: 1, isDeveloper: true, languages: [.kotlin])
-    let pm = Worker(name: "Heitor ", age: 1, isDeveloper: false, languages: nil)
+        name: "Hercules", age: 1, isDeveloper: true, languages: [.kotlin, .java])
+    let junioriOS = Worker(name: "Orfeu", age: 1, isDeveloper: true, languages: [.swift])
+    let juniorAndroid = Worker(name: "Teseu", age: 1, isDeveloper: true, languages: [.kotlin])
+    let pm = Worker(name: "Heitor", age: 1, isDeveloper: false, languages: nil)
 
     struct Company: Decodable {
         let name: String
@@ -85,6 +86,7 @@ struct ComplexUseCase {
             name: "Argonault", workers: [senioriOS, seniorAndroid, junioriOS, juniorAndroid, pm])
     }
 
+    let formattingOptions: JSONSerialization.WritingOptions = [.prettyPrinted, .sortedKeys]
     var argonaultsJson: String {
         get throws {
             let string = try? """
@@ -136,13 +138,21 @@ struct ComplexUseCase {
                 }
               ]
             }
-            """.formatJson(writeOptions: .prettyPrinted)
+            """.formatJson(writeOptions: formattingOptions)
             return try #require(string)
         }
     }
 
     @Test("should build complex use case correctly")
     func complexUseCase() async throws {
+        let isSenior = { (worker: Worker) -> Bool in
+            guard worker.isDeveloper else { return false }
+            guard let langs = worker.languages,
+                let firstLanguage = langs.first
+            else { return false }
+            return (firstLanguage == .swift && langs.contains(.objectiveC))
+                || (firstLanguage == .kotlin && langs.contains(.java))
+        }
         let json = Json {
             JsonKey("name") {
                 StringField("Argonault")
@@ -161,23 +171,8 @@ struct ComplexUseCase {
                                 BooleanField(worker.isDeveloper)
                             }
                             if worker.isDeveloper {
-                                if let firstLanguage = worker.languages?.first {
-                                    let isSenior =
-                                        (firstLanguage == .swift
-                                            && worker.languages?.contains(.objectiveC) ?? false)
-                                        || (firstLanguage == .kotlin
-                                            && worker.languages?.contains(.java) ?? false)
-                                    if firstLanguage == .objectiveC || firstLanguage == .java
-                                        || isSenior
-                                    {
-                                        JsonKey("isSenior") {
-                                            BooleanField(true)
-                                        }
-                                    } else {
-                                        JsonKey("isSenior") {
-                                            BooleanField(false)
-                                        }
-                                    }
+                                JsonKey("isSenior") {
+                                    BooleanField(isSenior(worker))
                                 }
                             }
                             if let languages = worker.languages {
@@ -194,7 +189,7 @@ struct ComplexUseCase {
                 }
             }
         }
-        let result = try #require(json.render(writingOptions: .prettyPrinted))
+        let result = try #require(json.render(writingOptions: formattingOptions))
         let expected = try #require(argonaultsJson)
         #expect(result == expected)
     }
