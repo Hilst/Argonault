@@ -64,3 +64,63 @@ struct BuilderTests {
         #expect(dictionary == expected)
     }
 }
+
+@Test func sample() async throws {
+
+    let members: [(name: String, age: Int, languages: [String])] = [
+        ("Jason", 40, ["Swift", "Objective-C"]),
+        ("Orfeu", 20, ["Swift"]),
+    ]
+
+    let json = Json {
+        JsonKey("name") { StringField("Argonaults") }
+        JsonKey("members") {
+            ArrayField {
+                for member in members {
+                    Json {
+                        JsonKey("name") { StringField(member.name) }
+                        JsonKey("age") { NumberField(member.age) }
+                        JsonKey("languages") {
+                            ArrayField {
+                                for language in member.languages {
+                                    Json {
+                                        JsonKey("name") { StringField(language) }
+                                    }
+                                }
+                            }
+                        }
+                        JsonKey("is_senior") {
+                            BooleanField {
+                                member.age > 30 && member.languages.count > 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    let asString = try #require(json.render(writingOptions: [.prettyPrinted, .sortedKeys]))
+    let expected = """
+        {
+          "name": "Argonaults",
+          "members": [
+            {
+              "name": "Jason",
+              "age": 40,
+              "languages": [{ "name": "Swift" }, { "name": "Objective-C" }],
+              "is_senior": true
+            },
+            {
+              "name": "Orfeu",
+              "age": 20,
+              "languages": [{ "name": "Swift" }],
+              "is_senior": false
+            }
+          ]
+        }
+        """
+    let expectedFormatted = try #require(
+        try? expected.formatJson(writeOptions: [.prettyPrinted, .sortedKeys]))
+    #expect(asString == expectedFormatted)
+}
