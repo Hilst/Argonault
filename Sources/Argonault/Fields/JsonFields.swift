@@ -1,6 +1,6 @@
 public typealias JsonBuilderFunc = () -> [JsonElement]
 
-extension Array<JsonElement> {
+extension [JsonElement] {
     func render() -> String { self.compactMap { $0.format }.joined(separator: ",") }
 }
 
@@ -16,9 +16,9 @@ public struct JsonKey: JsonElement {
 }
 
 public struct Json: JsonElement {
-	let elements: [JsonElement]
-	public var format: String? { "{\(elements.render())}" }
-	public init(@JsonBuilder _ elements: () -> [JsonKey]) {
+    let elements: [JsonElement]
+    public var format: String? { "{\(elements.render())}" }
+    public init(@JsonBuilder _ elements: () -> [JsonKey]) {
         self.elements = elements()
     }
 }
@@ -39,3 +39,5 @@ public struct ArrayField: JsonElement {
         self.elements = elements()
     }
 }
+
+extension ArrayField: JsonConvertible {}
