@@ -1,42 +1,25 @@
+// MARK: - declaration
 public protocol DirectValueField: JsonElement {
-    associatedtype Value
-    var value: Value? { get set }
-    func stringfy(_ value: Value) -> String
-    init(_ builder: () -> Value?)
-    init(_ value: Value?)
-    init()
+    func stringfy() -> String
 }
-
 extension DirectValueField {
-    public init(_ builder: () -> Value?) {
-        self.init(builder())
-    }
-
-    public init(_ value: Value?) {
-        self.init()
-        self.value = value
-    }
-
-    public var format: String? {
-        guard let value else { return nil }
-        return stringfy(value)
-    }
+    public var format: String? { return self.stringfy() }
 }
 
-public struct StringField: DirectValueField {
-    public init() {}
-    public var value: String?
-    public func stringfy(_ value: String) -> String { "\"\(value)\"" }
+// MARK: - string conf
+extension String: DirectValueField {
+    public func stringfy() -> String { "\"\(self)\"" }
 }
 
-public struct NumberField<N: Numeric>: DirectValueField {
-    public init() {}
-    public var value: N?
-    public func stringfy(_ value: N) -> String { "\(value)" }
-}
+// MARK: - number conf
+protocol NumberField: DirectValueField {}
+extension NumberField { public func stringfy() -> String { "\(self)" } }
+extension Double: NumberField {}
+extension Float: NumberField {}
+extension Int: NumberField {}
+extension UInt: NumberField {}
 
-public struct BooleanField: DirectValueField {
-    public init() {}
-    public var value: Bool?
-    public func stringfy(_ value: Value) -> String { "\(value)" }
+// MARK: - bool conf
+extension Bool: DirectValueField {
+    public func stringfy() -> String { "\(self)" }
 }

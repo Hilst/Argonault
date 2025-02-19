@@ -75,26 +75,26 @@ struct BuilderTests {
     let json = Json {
         JsonKey("name") { "Argonaults" }
         JsonKey("members") {
-            [
+            ArrayField {
                 for member in members {
                     Json {
                         JsonKey("name") { member.name }
                         JsonKey("age") { member.age }
                         JsonKey("languages") {
-                            [
+                            ArrayField {
                                 for language in member.languages {
                                     Json {
                                         JsonKey("name") { language }
                                     }
                                 }
-                            ]
+                            }
                         }
                         JsonKey("is_senior") {
                             member.age > 30 && member.languages.count > 1
                         }
                     }
                 }
-            ]
+            }
         }
     }
 
