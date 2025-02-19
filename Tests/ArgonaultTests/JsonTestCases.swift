@@ -209,7 +209,7 @@ enum JsonTestCases: String, CaseIterable {
                     }
                     Json {
                         JsonKey("id") { 2 }
-                        JsonKey("name") { ("Alice") }
+                        JsonKey("name") { "Alice" }
                         JsonKey("roles") {
                             ArrayField {
                                 ("user")
@@ -220,7 +220,7 @@ enum JsonTestCases: String, CaseIterable {
             }
             JsonKey("settings") {
                 Json {
-                    JsonKey("theme") { ("dark") }
+                    JsonKey("theme") { "dark" }
                     JsonKey("notifications") {
                         Json {
                             JsonKey("email") { true }
@@ -257,7 +257,7 @@ enum JsonTestCases: String, CaseIterable {
         Json {
             JsonKey("event") {
                 Json {
-                    JsonKey("name") { ("Conference") }
+                    JsonKey("name") { "Conference" }
                     JsonKey("date") {
                         {
                             let components = DateComponents(
@@ -338,8 +338,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func unicodeCharacters() -> Json {
         Json {
-            JsonKey("unicode") { ("こんにちは世界") }
-            JsonKey("emoji") { ("😊🎉🚀") }
+            JsonKey("unicode") { "こんにちは世界" }
+            JsonKey("emoji") { "😊🎉🚀" }
         }
     }
     case deeplyNestedStructures =
@@ -365,7 +365,7 @@ enum JsonTestCases: String, CaseIterable {
                             JsonKey("level3") {
                                 Json {
                                     JsonKey("level4") {
-                                        Json { JsonKey("value") { ("Deeply nested") } }
+                                        Json { JsonKey("value") { "Deeply nested" } }
                                     }
                                 }
                             }
@@ -386,12 +386,12 @@ enum JsonTestCases: String, CaseIterable {
             JsonKey("mixedArray") {
                 ArrayField {
                     1
-                    ("two")
-                    (3.0)
-                    (true)
+                    "two"
+                    3.0
+                    true
                     nil
                     Json {
-                        JsonKey("key") { ("value") }
+                        JsonKey("key") { "value" }
                     }
                 }
             }
