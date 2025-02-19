@@ -28,9 +28,9 @@ struct BuilderTests {
         let array = try ArrayField {
             for index in allIndex {
                 if indexesWithText.contains(index), let numberName = transform(index) {
-                    StringField(numberName)
+                    numberName
                 } else {
-                    NullField()
+                    nil
                 }
             }
         }.model([String?].self)
@@ -44,7 +44,7 @@ struct BuilderTests {
             for index in allIndex {
                 if indexesWithText.contains(index), let numberName = transform(index) {
                     JsonKey(numberName) {
-                        StringField(numberName)
+                        numberName
                     }
                 } else {
                     let numberName = transform(index) ?? String(index)
@@ -73,26 +73,24 @@ struct BuilderTests {
     ]
 
     let json = Json {
-        JsonKey("name") { StringField("Argonaults") }
+        JsonKey("name") { "Argonaults" }
         JsonKey("members") {
             ArrayField {
                 for member in members {
                     Json {
-                        JsonKey("name") { StringField(member.name) }
-                        JsonKey("age") { NumberField(member.age) }
+                        JsonKey("name") { member.name }
+                        JsonKey("age") { member.age }
                         JsonKey("languages") {
                             ArrayField {
                                 for language in member.languages {
                                     Json {
-                                        JsonKey("name") { StringField(language) }
+                                        JsonKey("name") { language }
                                     }
                                 }
                             }
                         }
                         JsonKey("is_senior") {
-                            BooleanField {
-                                member.age > 30 && member.languages.count > 1
-                            }
+                            member.age > 30 && member.languages.count > 1
                         }
                     }
                 }

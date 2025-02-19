@@ -25,19 +25,16 @@ public struct Json: JsonElement {
 
 extension Json: JsonConvertible {}
 
-public struct NullField: JsonElement {
-    public var format: String? { "null" }
-    public init() {}
-}
-
 public struct ArrayField: JsonElement {
-    public var format: String? {
-        "[\(elements.render())]"
-    }
-    public let elements: [JsonElement]
+    let elements: [JsonElement]
+    public var format: String? { "[\(elements.render())]" }
     public init(@JsonBuilder _ elements: JsonBuilderFunc) {
         self.elements = elements()
     }
 }
 
 extension ArrayField: JsonConvertible {}
+
+struct NullField: JsonElement {
+    public var format: String? { "null" }
+}

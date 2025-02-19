@@ -19,7 +19,7 @@ Package.swift
 
 ```swift
 dependencies: [
-    .package(url: "github.com/Hilst/Argonaults", from: "0.0.1")
+    .package(url: "github.com/Hilst/Argonaults", from: "0.1.0")
 ]
 ```
 
@@ -34,26 +34,24 @@ let members: [(name: String, age: Int, languages: [String])] = [
 ]
 
 let json = Json {
-    JsonKey("name") { StringField("Argonaults") }
+    JsonKey("name") { "Argonaults" }
     JsonKey("members") {
         ArrayField {
             for member in members {
                 Json {
-                    JsonKey("name") { StringField(member.name) }
-                    JsonKey("age") { NumberField(member.age) }
+                    JsonKey("name") { member.name }
+                    JsonKey("age") { member.age }
                     JsonKey("languages") {
                         ArrayField {
                             for language in member.languages {
                                 Json {
-                                    JsonKey("name") { StringField(language) }
+                                    JsonKey("name") { language }
                                 }
                             }
                         }
                     }
                     JsonKey("is_senior") {
-                        BooleanField {
-                            member.age > 30 && member.languages.count > 1
-                        }
+                        member.age > 30 && member.languages.count > 1
                     }
                 }
             }

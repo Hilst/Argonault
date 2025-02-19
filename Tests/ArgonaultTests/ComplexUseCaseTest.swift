@@ -155,31 +155,31 @@ struct ComplexUseCase {
         }
         let json = Json {
             JsonKey("name") {
-                StringField("Argonault")
+                "Argonault"
             }
             JsonKey("workers") {
                 ArrayField {
                     for worker in argonaults.workers {
                         Json {
                             JsonKey("name") {
-                                StringField(worker.name)
+                                worker.name
                             }
                             JsonKey("age") {
-                                NumberField(worker.age)
+                                worker.age
                             }
                             JsonKey("isDeveloper") {
-                                BooleanField(worker.isDeveloper)
+                                worker.isDeveloper
                             }
                             if worker.isDeveloper {
                                 JsonKey("isSenior") {
-                                    BooleanField(isSenior(worker))
+                                    isSenior(worker)
                                 }
                             }
                             if let languages = worker.languages {
                                 JsonKey("languages") {
                                     ArrayField {
                                         for language in languages {
-                                            StringField(language.rawValue)
+                                            language.rawValue
                                         }
                                     }
                                 }
