@@ -35,6 +35,6 @@ public struct ArrayField: JsonElement {
 
 extension ArrayField: JsonConvertible {}
 
-public struct NullField: JsonElement {
+struct NullField: JsonElement {
     public var format: String? { "null" }
 }

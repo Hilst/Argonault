@@ -28,9 +28,9 @@ struct BuilderTests {
         let array = try ArrayField {
             for index in allIndex {
                 if indexesWithText.contains(index), let numberName = transform(index) {
-                    StringField(numberName)
+                    numberName
                 } else {
-                    NullField()
+                    nil
                 }
             }
         }.model([String?].self)
@@ -44,7 +44,7 @@ struct BuilderTests {
             for index in allIndex {
                 if indexesWithText.contains(index), let numberName = transform(index) {
                     JsonKey(numberName) {
-                        StringField(numberName)
+                        numberName
                     }
                 } else {
                     let numberName = transform(index) ?? String(index)
