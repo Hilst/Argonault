@@ -4,12 +4,21 @@ extension [JsonElement] {
     func render() -> String { self.compactMap { $0.format }.joined(separator: ",") }
 }
 
+infix operator <- : AssignmentPrecedence
+public func <- (lhs: String, rhs: JsonElement?) -> JsonKey {
+    JsonKey(lhs, { [rhs] })
+}
+
+public func <- (lhs: String, @JsonBuilder rhs: JsonBuilderFunc) -> JsonKey {
+    JsonKey(lhs, rhs)
+}
+
 public struct JsonKey: JsonElement {
     let key: String
     public var format: String? { "\"\(key)\":\(elements.render())" }
     let elements: [JsonElement]
 
-    public init(_ key: String, @JsonBuilder _ elements: JsonBuilderFunc) {
+	internal init(_ key: String, @JsonBuilder _ elements: JsonBuilderFunc) {
         self.key = key
         self.elements = elements()
     }

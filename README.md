@@ -34,29 +34,25 @@ let members: [(name: String, age: Int, languages: [String])] = [
 ]
 
 let json = Json {
-    JsonKey("name") { "Argonaults" }
-    JsonKey("members") {
-        ArrayField {
+    "name" <- "Argonaults"
+    "members"
+        <- ArrayField {
             for member in members {
                 Json {
-                    JsonKey("name") { member.name }
-                    JsonKey("age") { member.age }
-                    JsonKey("languages") {
-                        ArrayField {
+                    "name" <- member.name
+                    "age" <- member.age
+                    "languages"
+                        <- ArrayField {
                             for language in member.languages {
                                 Json {
-                                    JsonKey("name") { language }
+                                    "name" <- language
                                 }
                             }
                         }
-                    }
-                    JsonKey("is_senior") {
-                        member.age > 30 && member.languages.count > 1
-                    }
+                    "is_senior" <- member.age > 30 && member.languages.count > 1
                 }
             }
         }
-    }
 }
 
 let asString = json.render(writingOptions: .prettyPrinted)!

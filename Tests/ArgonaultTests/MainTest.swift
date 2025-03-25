@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import Argonault
+import Argonault
 
 @Test("should map all json builders", arguments: JsonTestCases.allCases)
 func jsonBuilder(_ testCase: JsonTestCases) async throws {
@@ -43,14 +43,10 @@ struct BuilderTests {
         let dictionary = try Json {
             for index in allIndex {
                 if indexesWithText.contains(index), let numberName = transform(index) {
-                    JsonKey(numberName) {
-                        numberName
-                    }
+                    numberName <- numberName
                 } else {
                     let numberName = transform(index) ?? String(index)
-                    JsonKey(numberName) {
-                        NullField()
-                    }
+                    numberName <- nil
                 }
             }
         }.model([String: String?].self)
@@ -73,29 +69,25 @@ struct BuilderTests {
     ]
 
     let json = Json {
-        JsonKey("name") { "Argonaults" }
-        JsonKey("members") {
-            ArrayField {
+        "name" <- "Argonaults"
+        "members"
+            <- ArrayField {
                 for member in members {
                     Json {
-                        JsonKey("name") { member.name }
-                        JsonKey("age") { member.age }
-                        JsonKey("languages") {
-                            ArrayField {
+                        "name" <- member.name
+                        "age" <- member.age
+                        "languages"
+                            <- ArrayField {
                                 for language in member.languages {
                                     Json {
-                                        JsonKey("name") { language }
+                                        "name" <- language
                                     }
                                 }
                             }
-                        }
-                        JsonKey("is_senior") {
-                            member.age > 30 && member.languages.count > 1
-                        }
+                        "is_senior" <- member.age > 30 && member.languages.count > 1
                     }
                 }
             }
-        }
     }
 
     let asString = try #require(json.render(writingOptions: [.prettyPrinted, .sortedKeys]))
