@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-@testable import Argonault
+import Argonault
 
 struct ComplexUseCase {
 
@@ -154,40 +154,22 @@ struct ComplexUseCase {
                 || (firstLanguage == .kotlin && langs.contains(.java))
         }
         let json = Json {
-            JsonKey("name") {
-                "Argonault"
-            }
-            JsonKey("workers") {
-                ArrayField {
-                    for worker in argonaults.workers {
-                        Json {
-                            JsonKey("name") {
-                                worker.name
-                            }
-                            JsonKey("age") {
-                                worker.age
-                            }
-                            JsonKey("isDeveloper") {
-                                worker.isDeveloper
-                            }
-                            if worker.isDeveloper {
-                                JsonKey("isSenior") {
-                                    isSenior(worker)
-                                }
-                            }
-                            if let languages = worker.languages {
-                                JsonKey("languages") {
-                                    ArrayField {
-                                        for language in languages {
-                                            language.rawValue
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+			"name" <- "Argonault"
+			"workers" <- ArrayField {
+				for worker in argonaults.workers {
+					Json {
+						"name" <- worker.name
+						"age" <- worker.age
+						"isDeveloper" <- worker.isDeveloper
+						if worker.isDeveloper {
+							"isSenior" <- isSenior(worker)
+						}
+						if let languages = worker.languages {
+							"languages" <- ArrayField { languages.map { $0.rawValue } }
+						}
+					}
+				}
+			}
         }
         let result = try #require(json.render(writingOptions: formattingOptions))
         let expected = try #require(argonaultsJson)

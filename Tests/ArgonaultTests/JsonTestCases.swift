@@ -12,8 +12,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func simpleWithStrings() -> Json {
         Json {
-            JsonKey("name") { "John Doe" }
-            JsonKey("email") { "john.doe@example.com" }
+            "name" <- "John Doe"
+            "email" <- "john.doe@example.com"
         }
     }
     case nestedObjects =
@@ -32,19 +32,17 @@ enum JsonTestCases: String, CaseIterable {
         """
     func nestedObjects() -> Json {
         Json {
-            JsonKey("person") {
-                Json {
-                    JsonKey("name") { "Jane Doe" }
-                    JsonKey("age") { 30 }
-                    JsonKey("address") {
-                        Json {
-                            JsonKey("street") { "123 Main St" }
-                            JsonKey("city") { "Anytown" }
-                            JsonKey("state") { "CA" }
+            "person"
+                <- Json {
+                    "name" <- "Jane Doe"
+                    "age" <- 30
+                    "address"
+                        <- Json {
+                            "street" <- "123 Main St"
+                            "city" <- "Anytown"
+                            "state" <- "CA"
                         }
-                    }
                 }
-            }
         }
     }
     case arrays =
@@ -55,13 +53,12 @@ enum JsonTestCases: String, CaseIterable {
         """
     func arrays() -> Json {
         Json {
-            JsonKey("fruits") {
-                ArrayField {
+            "fruits"
+                <- ArrayField {
                     "apple"
                     "banana"
                     "cherry"
                 }
-            }
         }
     }
     case mixedDataTypes =
@@ -78,21 +75,19 @@ enum JsonTestCases: String, CaseIterable {
         """
     func mixedDataTypes() -> Json {
         Json {
-            JsonKey("id") { 123 }
-            JsonKey("isActive") { true }
-            JsonKey("tags") {
-                ArrayField {
+            "id" <- 123
+            "isActive" <- true
+            "tags"
+                <- ArrayField {
                     "swift"
                     "json"
                     "ios"
                 }
-            }
-            JsonKey("details") {
-                Json {
-                    JsonKey("height") { 5.9 }
-                    JsonKey("weight") { 160.5 }
+            "details"
+                <- Json {
+                    "height" <- 5.9
+                    "weight" <- 160.5
                 }
-            }
         }
     }
     case nestedArrays =
@@ -107,8 +102,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func nestedArrays() -> Json {
         Json {
-            JsonKey("matrix") {
-                ArrayField {
+            "matrix"
+                <- ArrayField {
                     ArrayField {
                         1
                         2
@@ -125,7 +120,6 @@ enum JsonTestCases: String, CaseIterable {
                         9
                     }
                 }
-            }
         }
     }
     case nullValues =
@@ -138,9 +132,9 @@ enum JsonTestCases: String, CaseIterable {
         """
     func nullValues() -> Json {
         Json {
-            JsonKey("name") { "Alice" }
-            JsonKey("middleName") { nil }
-            JsonKey("age") { 25 }
+            "name" <- "Alice"
+            "middleName" <- nil
+            "age" <- 25
         }
     }
     case booleanValues =
@@ -152,8 +146,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func booleanValues() -> Json {
         Json {
-            JsonKey("isPublic") { true }
-            JsonKey("isArchived") { false }
+            "isPublic" <- true
+            "isArchived" <- false
         }
     }
     case numbers =
@@ -165,8 +159,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func numbers() -> Json {
         Json {
-            JsonKey("integerValue") { 42 }
-            JsonKey("floatValue") { 3.14 }
+            "integerValue" <- 42
+            "floatValue" <- 3.14
         }
     }
     case complexNestedStructures =
@@ -195,40 +189,35 @@ enum JsonTestCases: String, CaseIterable {
         """
     func complexNestedStructures() -> Json {
         Json {
-            JsonKey("users") {
-                ArrayField {
+            "users"
+                <- ArrayField {
                     Json {
-                        JsonKey("id") { 1 }
-                        JsonKey("name") { "Bob" }
-                        JsonKey("roles") {
-                            ArrayField {
-                                ("admin")
-                                ("user")
+                        "id" <- 1
+                        "name" <- "Bob"
+                        "roles"
+                            <- ArrayField {
+                                "admin"
+                                "user"
                             }
-                        }
                     }
                     Json {
-                        JsonKey("id") { 2 }
-                        JsonKey("name") { "Alice" }
-                        JsonKey("roles") {
-                            ArrayField {
-                                ("user")
+                        "id" <- 2
+                        "name" <- "Alice"
+                        "roles"
+                            <- ArrayField {
+                                "user"
                             }
-                        }
                     }
                 }
-            }
-            JsonKey("settings") {
-                Json {
-                    JsonKey("theme") { "dark" }
-                    JsonKey("notifications") {
-                        Json {
-                            JsonKey("email") { true }
-                            JsonKey("sms") { false }
+            "settings"
+                <- Json {
+                    "theme" <- "dark"
+                    "notifications"
+                        <- Json {
+                            "email" <- true
+                            "sms" <- false
                         }
-                    }
                 }
-            }
         }
     }
     case emptyObjectsAndArrays =
@@ -240,8 +229,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func emptyObjectsAndArrays() -> Json {
         Json {
-            JsonKey("emptyObject") { Json {} }
-            JsonKey("emptyArray") { ArrayField {} }
+            "emptyObject" <- Json {}
+            "emptyArray" <- ArrayField {}
         }
     }
     case datesAsStrings =
@@ -255,11 +244,11 @@ enum JsonTestCases: String, CaseIterable {
         """
     func datesAsStrings() -> Json {
         Json {
-            JsonKey("event") {
-                Json {
-                    JsonKey("name") { "Conference" }
-                    JsonKey("date") {
-                        {
+            "event"
+                <- Json {
+                    "name" <- "Conference"
+                    "date"
+                        <- {
                             let components = DateComponents(
                                 timeZone: .gmt, year: 2023, month: 10, day: 15, hour: 9)
                             let calendar = Calendar(identifier: .gregorian)
@@ -268,9 +257,7 @@ enum JsonTestCases: String, CaseIterable {
                             let formatter = ISO8601DateFormatter()
                             return formatter.string(from: date)
                         }()
-                    }
                 }
-            }
         }
     }
     case largeNumbers =
@@ -282,8 +269,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func largeNumbers() -> Json {
         Json {
-            JsonKey("largeNumber") { 1_234_567_890_123_456_789 }
-            JsonKey("smallNumber") { 0.000000000123456 }
+            "largeNumber" <- 1_234_567_890_123_456_789
+            "smallNumber" <- 0.000000000123456
         }
     }
     case mixedNestedArraysAndObjects =
@@ -303,30 +290,27 @@ enum JsonTestCases: String, CaseIterable {
         """
     func mixedNestedArraysAndObjects() -> Json {
         Json {
-            JsonKey("data") {
-                ArrayField {
+            "data"
+                <- ArrayField {
                     Json {
-                        JsonKey("id") { 1 }
-                        JsonKey("values") {
-                            ArrayField {
+                        "id" <- 1
+                        "values"
+                            <- ArrayField {
                                 1
                                 2
                                 3
                             }
-                        }
                     }
                     Json {
-                        JsonKey("id") { 2 }
-                        JsonKey("values") {
-                            ArrayField {
+                        "id" <- 2
+                        "values"
+                            <- ArrayField {
                                 4
                                 5
                                 6
                             }
-                        }
                     }
                 }
-            }
         }
     }
     case unicodeCharacters =
@@ -338,8 +322,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func unicodeCharacters() -> Json {
         Json {
-            JsonKey("unicode") { "こんにちは世界" }
-            JsonKey("emoji") { "😊🎉🚀" }
+            "unicode" <- "こんにちは世界"
+            "emoji" <- "😊🎉🚀"
         }
     }
     case deeplyNestedStructures =
@@ -358,21 +342,19 @@ enum JsonTestCases: String, CaseIterable {
         """
     func deeplyNestedStructures() -> Json {
         Json {
-            JsonKey("level1") {
-                Json {
-                    JsonKey("level2") {
-                        Json {
-                            JsonKey("level3") {
-                                Json {
-                                    JsonKey("level4") {
-                                        Json { JsonKey("value") { "Deeply nested" } }
-                                    }
+            "level1"
+                <- Json {
+                    "level2"
+                        <- Json {
+                            "level3"
+                                <- Json {
+                                    "level4"
+                                        <- Json {
+                                            "value" <- "Deeply nested"
+                                        }
                                 }
-                            }
                         }
-                    }
                 }
-            }
         }
     }
     case multipleDataTypesInArray =
@@ -383,18 +365,17 @@ enum JsonTestCases: String, CaseIterable {
         """
     func multipleDataTypesInArray() -> Json {
         Json {
-            JsonKey("mixedArray") {
-                ArrayField {
+            "mixedArray"
+                <- ArrayField {
                     1
                     "two"
                     3.0
                     true
                     nil
                     Json {
-                        JsonKey("key") { "value" }
+                        "key" <- "value"
                     }
                 }
-            }
         }
     }
     case largeNestedArrays =
@@ -411,8 +392,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func largeNestedArrays() -> Json {
         Json {
-            JsonKey("largeArray") {
-                ArrayField {
+            "largeArray"
+                <- ArrayField {
                     ArrayField {
                         1
                         2
@@ -449,7 +430,6 @@ enum JsonTestCases: String, CaseIterable {
                         25
                     }
                 }
-            }
         }
     }
     case emptyStrings =
@@ -461,8 +441,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func emptyStrings() -> Json {
         Json {
-            JsonKey("emptyString") { "" }
-            JsonKey("nonEmptyString") { "Hello" }
+            "emptyString" <- ""
+            "nonEmptyString" <- "Hello"
         }
     }
     case escape =
@@ -477,11 +457,11 @@ enum JsonTestCases: String, CaseIterable {
         """
     func escape() -> Json {
         Json {
-            JsonKey("message") { "Hello, world! 🌍" }
-            JsonKey("specialChars") { "!@#$%^&*()_+{}:\\\"<>?[];',./`~" }
-            JsonKey("whitespace") { "   This has leading and trailing spaces   " }
-            JsonKey("newlines") { #"This\nhas\nnewlines"# }
-            JsonKey("unicodeEscaped") { "\\u0048\\u0065\\u006C\\u006C\\u006F" }
+            "message" <- "Hello, world! 🌍"
+            "specialChars" <- "!@#$%^&*()_+{}:\\\"<>?[];',./`~"
+            "whitespace" <- "   This has leading and trailing spaces   "
+            "newlines" <- #"This\nhas\nnewlines"#
+            "unicodeEscaped" <- "\\u0048\\u0065\\u006C\\u006C\\u006F"
         }
     }
     case complexMixedTypes =
@@ -502,27 +482,24 @@ enum JsonTestCases: String, CaseIterable {
         """
     func complexMixedTypes() -> Json {
         Json {
-            JsonKey("mixed") {
-                Json {
-                    JsonKey("string") { "Hello" }
-                    JsonKey("number") { 42 }
-                    JsonKey("boolean") { true }
-                    JsonKey("nullValue") { nil }
-                    JsonKey("array") {
-                        ArrayField {
+            "mixed"
+                <- Json {
+                    "string" <- "Hello"
+                    "number" <- 42
+                    "boolean" <- true
+                    "nullValue" <- nil
+                    "array"
+                        <- ArrayField {
                             1
                             "two"
                             false
                         }
-                    }
-                    JsonKey("object") {
-                        Json {
-                            JsonKey("nestedString") { "World" }
-                            JsonKey("nestedNumber") { 3.14 }
+                    "object"
+                        <- Json {
+                            "nestedString" <- "World"
+                            "nestedNumber" <- 3.14
                         }
-                    }
                 }
-            }
         }
     }
     case largeString =
@@ -533,9 +510,8 @@ enum JsonTestCases: String, CaseIterable {
         """
     func largeString() -> Json {
         Json {
-            JsonKey("largeString") {
-                "This is a very large string with many characters. It is used to test how well the JSON builder handles large strings. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            }
+            "largeString"
+                <- "This is a very large string with many characters. It is used to test how well the JSON builder handles large strings. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         }
     }
 
